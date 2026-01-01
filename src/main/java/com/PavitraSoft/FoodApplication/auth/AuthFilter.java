@@ -33,9 +33,18 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
+
+            String path = request.getServletPath();
+
+            // ✅ Skip auth APIs
+            if (path.startsWith("/api/auth")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             final String requestTokenHeader = request.getHeader("Authorization");
 
-            if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")) {
+            if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
