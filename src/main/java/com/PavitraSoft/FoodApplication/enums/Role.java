@@ -2,5 +2,6 @@ package com.PavitraSoft.FoodApplication.enums;
 
 public enum Role {
     USER,
-    ADMIN
+    ADMIN,
+    RESTAURANT_ADMIN
 }

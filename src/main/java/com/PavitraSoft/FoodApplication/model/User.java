@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private OrderItem cart;   // EMBEDDED CART
+    private boolean pendingRestaurantAdminRequest;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

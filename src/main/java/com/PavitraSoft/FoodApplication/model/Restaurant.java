@@ -1,5 +1,6 @@
 package com.PavitraSoft.FoodApplication.model;
 
+import com.PavitraSoft.FoodApplication.enums.RestaurantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,15 @@ public class Restaurant {
 
     @Id
     private String id;
+    private String ownerId;
     private String name;
     private String description;
     private Address address;
     private Double rating;
+    private long ratingCount;
     private boolean isOpen;
+    private String cuisine;
+    private Long basePrice;
 
     private String phone;
     private List<String> categories;
@@ -32,5 +37,7 @@ public class Restaurant {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
+
+    private RestaurantStatus status;
 
 }

@@ -8,23 +8,25 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "carts")
-public class Cart {
+@Document(collection = "reviews")
+public class Review {
 
     @Id
     private String id;
 
-    private String userId;
     private String restaurantId;
+    private String userId;
+    private String orderId;
 
-    private List<OrderItem> items;
+    private int rating;
+    private String comment;
 
-    private Double totalAmount;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createAt;
+
+
 }

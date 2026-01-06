@@ -4,6 +4,10 @@ import com.PavitraSoft.FoodApplication.dto.AddressRequestDto;
 import com.PavitraSoft.FoodApplication.dto.AddressResponseDto;
 import com.PavitraSoft.FoodApplication.dto.UpdateProfileRequestDto;
 import com.PavitraSoft.FoodApplication.dto.UserProfileResponseDto;
+import com.PavitraSoft.FoodApplication.enums.Role;
+import com.PavitraSoft.FoodApplication.globalController.BadRequestException;
+import com.PavitraSoft.FoodApplication.globalController.ForbiddenException;
+import com.PavitraSoft.FoodApplication.globalController.ResourceNotFoundException;
 import com.PavitraSoft.FoodApplication.interfaces.UserInterface;
 import com.PavitraSoft.FoodApplication.model.Address;
 import com.PavitraSoft.FoodApplication.model.User;
@@ -21,7 +25,7 @@ public class UserService implements UserInterface {
     private final UserRepository userRepository;
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     public UserProfileResponseDto getProfile(User user) {
@@ -77,7 +81,7 @@ public class UserService implements UserInterface {
                 .stream()
                 .filter(a -> a.getId().equals(addressId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Address not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
 
         if(dto.isDefault()) {
             user.getAddress().forEach(a -> a.setDefault(false));
@@ -100,7 +104,7 @@ public class UserService implements UserInterface {
                 .stream()
                 .filter(a -> a.getId().equals(addressId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Address not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
 
         boolean wasDefault = address.isDefault();
         user.getAddress().remove(address);
@@ -122,5 +126,19 @@ public class UserService implements UserInterface {
                 .pincode(address.getPincode())
                 .isDefault(address.isDefault())
                 .build();
+    }
+
+//    User applies to become Restaurant Admin
+    public void applyForRestaurantAdmin(User user, String restaurantName) {
+        if(user.getRole() != Role.USER) {
+            throw new ForbiddenException("Only regular users can apply");
+        }
+
+        if(user.isPendingRestaurantAdminRequest()) {
+            throw new BadRequestException("You already have a pending application.");
+        }
+
+        user.setPendingRestaurantAdminRequest(true); // flag to track request
+        userRepository.save(user);
     }
 }

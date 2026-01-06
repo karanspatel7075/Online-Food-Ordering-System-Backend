@@ -1,7 +1,9 @@
 package com.PavitraSoft.FoodApplication.auth;
 
+import com.PavitraSoft.FoodApplication.globalController.UnauthorizedException;
 import com.PavitraSoft.FoodApplication.model.User;
 import com.PavitraSoft.FoodApplication.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +46,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
             final String requestTokenHeader = request.getHeader("Authorization");
 
-            if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
+            if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -61,8 +63,8 @@ public class AuthFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            handlerExceptionResolver.resolveException(request, response, null, e);
+        } catch (ExpiredJwtException e) {
+            throw new UnauthorizedException("Token expired");
         }
     }
 }

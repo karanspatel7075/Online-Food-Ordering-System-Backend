@@ -9,7 +9,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +24,7 @@ public class Order {
     private String id;
     private String restaurantId;
     private String userId;
+
     private List<OrderItem> items;
     private Double totalAmount;
     private OrderStatus status;
@@ -29,4 +32,14 @@ public class Order {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime estimatedDeliveryTime;
+
+    private Map<OrderStatus, LocalDateTime> statusTimeLine = new HashMap<>();
+
+    public void markStatus(OrderStatus status) {
+        this.status = status;
+        this.updatedAt = LocalDateTime.now();
+        this.statusTimeLine.put(status, LocalDateTime.now());
+    }
+
 }

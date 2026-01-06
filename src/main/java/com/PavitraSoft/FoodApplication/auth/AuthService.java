@@ -3,6 +3,7 @@ package com.PavitraSoft.FoodApplication.auth;
 import com.PavitraSoft.FoodApplication.dto.ForgotPasswordRequestDto;
 import com.PavitraSoft.FoodApplication.dto.ResetPasswordRequestDto;
 import com.PavitraSoft.FoodApplication.enums.Role;
+import com.PavitraSoft.FoodApplication.globalController.BadRequestException;
 import com.PavitraSoft.FoodApplication.model.PasswordResetOtp;
 import com.PavitraSoft.FoodApplication.model.User;
 import com.PavitraSoft.FoodApplication.repository.PasswordResetOtpRepository;
@@ -10,6 +11,8 @@ import com.PavitraSoft.FoodApplication.repository.UserRepository;
 import com.PavitraSoft.FoodApplication.service.EmailServiceImple;
 import com.PavitraSoft.FoodApplication.util.OtpGenerator;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,6 +44,8 @@ public class AuthService {
         this.resetOtpRepository = resetOtpRepository;
         this.emailServiceImple = emailServiceImple;
     }
+
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
         public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
@@ -91,7 +96,8 @@ public class AuthService {
 
         System.out.println("AuthService sendOtp() CALLED");
         System.out.println("Email: " + user.getEmail());
-        System.out.println("OTP: " + otp);
+        log.info("OTP generated for email={}", user.getEmail());
+
 
         resetOtpRepository.save(resetOtp);
         emailServiceImple.sendOtp(user.getEmail(), otp);
@@ -106,7 +112,7 @@ public class AuthService {
         }
 
         if(!savedOtp.getOtp().equals(dto.getOtp())) {
-            throw new RuntimeException("Invalid OTP");
+            throw new BadRequestException("Invalid OTP");
         }
 
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new RuntimeException("Email invalid"));
@@ -123,5 +129,7 @@ public class AuthService {
             System.out.println("Failed to send confirmation email: " + e.getMessage());
         }
     }
+
+
 
 }

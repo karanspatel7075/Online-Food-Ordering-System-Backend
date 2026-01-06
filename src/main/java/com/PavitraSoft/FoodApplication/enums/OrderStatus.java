@@ -1,6 +1,7 @@
 package com.PavitraSoft.FoodApplication.enums;
 
 public enum OrderStatus {
+    CREATED,
     PLACED,
     ACCEPTED,
     PREPARING,
