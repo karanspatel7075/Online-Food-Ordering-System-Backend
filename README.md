@@ -22,7 +22,7 @@ The architecture follows **clean separation of concerns**, **RESTful APIs**, and
 
 * **Backend:** Java, Spring Boot 3
 * **Security:** Spring Security, JWT
-* **Database:** MySQL
+* **Database:** MongoDB
 * **ORM:** Spring Data JPA / Hibernate
 * **Build Tool:** Maven
 * **API Style:** REST
