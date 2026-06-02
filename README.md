@@ -1,4 +1,4 @@
-# 🍔 Food Delivery Platform Backend (Swiggy‑like System)
+# Food Delivery Platform Backend (Swiggy‑like System)
 
 A scalable, role‑based backend system inspired by **Swiggy/Zomato**, built using **Spring Boot**. This project focuses on restaurant onboarding, menu management, cart & order processing, admin controls, and user experience — designed with real‑world production patterns in mind.
 
